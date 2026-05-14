@@ -12,7 +12,8 @@ logger = logging.getLogger(__name__)
 
 # --- CONSTANTS ---
 # Replace this with your actual Google Maps API Key
-GOOGLE_MAPS_API_KEY = "AlzaSyBE9GpUrBD2eO_W2ACBKZ_ckTB4Kas8Rlc"
+GOOGLE_MAPS_API_KEY = "AIzaSyBE9GpUrBD2eO_W2ACBKZ_ckTB4Kas8Rlc" \
+""
 
 # --- Modular Imports ---
 # Wrapping imports in try-except ensures the app loads even if a library fails
