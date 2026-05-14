@@ -10,6 +10,10 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# --- CONSTANTS ---
+# Replace this with your actual Google Maps API Key
+GOOGLE_MAPS_API_KEY = "AlzaSyBE9GpUrBD2eO_W2ACBKZ_ckTB4Kas8Rlc"
+
 # --- Modular Imports ---
 # Wrapping imports in try-except ensures the app loads even if a library fails
 try:
@@ -85,7 +89,6 @@ def main():
         st.header("🚦 Mission Control")
         
         with st.expander("📍 Location & Routing", expanded=True):
-            api_key = st.text_input("🔑 Google Maps API Key", type="password", help="Required for live directions iframe")
             source = st.text_input("🟢 Source", value="Sector 18 Noida")
             destination = st.text_input("🔴 Destination", value="Akshardham")
             lat = st.number_input("🗺️ Latitude", value=28.5706, format="%.4f")
@@ -152,13 +155,13 @@ def main():
             col_map, col_heat = st.columns([1.2, 1])
             with col_map:
                 st.subheader("🗺️ Live Directions Mapping")
-                if api_key:
+                if GOOGLE_MAPS_API_KEY and GOOGLE_MAPS_API_KEY != "YOUR_GOOGLE_MAPS_API_KEY_HERE":
                     origin_encoded = urllib.parse.quote(source)
                     dest_encoded = urllib.parse.quote(destination)
-                    map_url = f"https://www.google.com/maps/embed/v1/directions?key={api_key}&origin={origin_encoded}&destination={dest_encoded}&mode=driving"
+                    map_url = f"https://www.google.com/maps/embed/v1/directions?key={GOOGLE_MAPS_API_KEY}&origin={origin_encoded}&destination={dest_encoded}&mode=driving"
                     st.markdown(f'<iframe width="100%" height="450" style="border:1px solid #333; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);" loading="lazy" allowfullscreen src="{map_url}"></iframe>', unsafe_allow_html=True)
                 else:
-                    st.warning("⚠️ Enter Google Maps API Key in sidebar configuring routing iframe.")
+                    st.warning("⚠️ Please configure the GOOGLE_MAPS_API_KEY constant in app.py to enable live tracking.")
                     
             with col_heat:
                 display_heatmap()
