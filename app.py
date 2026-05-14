@@ -141,7 +141,7 @@ def main():
         st.header("🚦 Mission Control")
         
         with st.expander("� API Integrations (Optional)", expanded=False):
-            gemini_key = st.text_input("💎 Gemini API Key", type="password", help="Add key to enable live AI Chatbot. Leave blank to use safe fallback mode.")
+            gemini_key = st.text_input("AIzaSyAl3fUnwnMgQxG4BV576If0Xf4nxONzf2Q", type="password", help="Add key to enable live AI Chatbot. Leave blank to use safe fallback mode.")
 
         with st.expander("�📍 Location & Routing", expanded=True):
             source = st.text_input("🟢 Source", value="Sector 18 Noida")
@@ -164,12 +164,16 @@ def main():
         
         st.markdown("---")
         predict_btn = st.button("🚀 INITIATE AI PREDICTION")
+        
+        if predict_btn:
+            st.session_state.dashboard_active = True
 
     # --- 5. Main Dashboard Architecture ---
-    if predict_btn:
+    if st.session_state.get('dashboard_active', False):
         try:
             with st.spinner('Synchronizing modules & running neural network...'):
-                time.sleep(0.8) # Sleek UI delay
+                if predict_btn: # Only delay on the initial click
+                    time.sleep(0.8) # Sleek UI delay
                 # Module 1: ML Prediction
                 prediction = predict_congestion(
                     lat=lat, lng=lng, time_of_day=time_of_day, weather=weather_condition, 
