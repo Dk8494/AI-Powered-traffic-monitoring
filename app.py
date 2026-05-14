@@ -167,9 +167,13 @@ def main():
         
         if predict_btn:
             st.session_state.dashboard_active = True
+            
+    # Try to keep dashboard open permanently if it was ever opened
+    if 'dashboard_active' not in st.session_state:
+        st.session_state.dashboard_active = False
 
     # --- 5. Main Dashboard Architecture ---
-    if st.session_state.get('dashboard_active', False):
+    if st.session_state.dashboard_active:
         try:
             with st.spinner('Synchronizing modules & running neural network...'):
                 if predict_btn: # Only delay on the initial click
