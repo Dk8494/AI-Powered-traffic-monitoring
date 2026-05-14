@@ -39,38 +39,89 @@ st.set_page_config(
 # --- 2. Enhanced CSS ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
-    html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-    .main { background-color: #121212; color: #E0E0E0; }
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
     
+    /* Global Cyberpunk Dark Theme */
+    html, body, [class*="css"] { 
+        font-family: 'Space Grotesk', sans-serif; 
+    }
+    .stApp { background: radial-gradient(circle at top center, #121218 0%, #050505 100%) !important; color: #E0E0E0; }
+    
+    /* Glassmorphism Sidebar */
+    [data-testid="stSidebar"] {
+        background: rgba(10, 10, 12, 0.6) !important;
+        backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(0, 240, 255, 0.15);
+    }
+    
+    /* Futuristic glowing buttons */
     .stButton>button {
         width: 100%;
-        background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%);
-        color: #121212 !important;
-        font-weight: 800;
-        border-radius: 12px;
-        padding: 12px;
-        border: none;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: linear-gradient(90deg, #00F0FF 0%, #8A2BE2 100%);
+        color: #FFFFFF !important;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border-radius: 8px;
+        padding: 15px;
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(0, 201, 255, 0.4);
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 0 25px rgba(138, 43, 226, 0.6);
+        border: 1px solid #00F0FF;
     }
     
+    /* Palantir-style KPI Cards */
     .kpi-card {
-        background: #1E1E1E; border: 1px solid #333; padding: 20px; border-radius: 15px;
-        text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.3s ease; margin-bottom: 20px;
+        background: rgba(20, 20, 25, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 240, 255, 0.15);
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
     }
-    .kpi-card:hover { transform: translateY(-5px); border-color: #00C9FF; }
-    .kpi-title { font-size: 1rem; color: #A0A0A0; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-    .kpi-value { font-size: 2rem; font-weight: 800; color: #FFFFFF; }
     
-    .alert-banner { padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; animation: fadeIn 0.5s ease-in-out; }
-    .alert-low { background: rgba(76, 175, 80, 0.1); border: 2px solid #4CAF50; color: #4CAF50; }
-    .alert-medium { background: rgba(255, 152, 0, 0.1); border: 2px solid #FF9800; color: #FF9800; }
-    .alert-high { background: rgba(244, 67, 54, 0.1); border: 2px solid #F44336; color: #F44336; }
-    @keyframes fadeIn { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
+    /* Animated Radar scanning effect on hover */
+    .kpi-card::before {
+        content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+        background: linear-gradient(to right, transparent, rgba(0, 240, 255, 0.1), transparent);
+        transform: skewX(-25deg); opacity: 0; transition: opacity 0.3s ease;
+    }
+    .kpi-card:hover::before { opacity: 1; animation: scan 1.5s infinite; }
+    @keyframes scan { 0% { left: -100%; } 100% { left: 200%; } }
+    
+    .kpi-card:hover { 
+        transform: translateY(-5px); 
+        border-color: #00F0FF; 
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+    }
+    .kpi-title { font-size: 0.85rem; color: #8892B0; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+    .kpi-value { font-family: 'JetBrains Mono', monospace; font-size: 2.2rem; font-weight: 700; color: #00F0FF; text-shadow: 0 0 10px rgba(0,240,255,0.4); }
+    
+    /* Dynamic AI Alerts */
+    .alert-banner { padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 20px; animation: glowPulse 2s infinite alternate; backdrop-filter: blur(10px); }
+    .alert-low { background: rgba(0, 255, 102, 0.05); border: 1px solid #00FF66; color: #00FF66; text-shadow: 0 0 10px rgba(0,255,102,0.4); }
+    .alert-medium { background: rgba(255, 152, 0, 0.05); border: 1px solid #FF9800; color: #FF9800; text-shadow: 0 0 10px rgba(255,152,0,0.4); }
+    .alert-high { background: rgba(255, 0, 60, 0.05); border: 1px solid #FF003C; color: #FF003C; text-shadow: 0 0 10px rgba(255,0,60,0.4); }
+    
+    @keyframes glowPulse { 
+        0% { box-shadow: inset 0 0 10px rgba(255,255,255,0.02); } 
+        100% { box-shadow: inset 0 0 20px rgba(255,255,255,0.05); } 
+    }
+    
+    /* Typography Overrides */
+    h1, h2, h3 { color: #FFFFFF !important; font-family: 'Space Grotesk', sans-serif !important; }
+    hr { border-color: rgba(0, 240, 255, 0.2) !important; }
+    
     </style>
 """, unsafe_allow_html=True)
 
