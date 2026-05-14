@@ -140,7 +140,10 @@ def main():
         st.image("https://cdn-icons-png.flaticon.com/512/2830/2830305.png", width=80)
         st.header("🚦 Mission Control")
         
-        with st.expander("📍 Location & Routing", expanded=True):
+        with st.expander("� API Integrations (Optional)", expanded=False):
+            gemini_key = st.text_input("💎 Gemini API Key", type="password", help="Add key to enable live AI Chatbot. Leave blank to use safe fallback mode.")
+
+        with st.expander("�📍 Location & Routing", expanded=True):
             source = st.text_input("🟢 Source", value="Sector 18 Noida")
             destination = st.text_input("🔴 Destination", value="Akshardham")
             lat = st.number_input("🗺️ Latitude", value=28.5706, format="%.4f")
@@ -220,6 +223,10 @@ def main():
             st.divider()
             
             # Module 7: AI Chatbot
+            import os
+            if gemini_key:
+                os.environ["GEMINI_API_KEY"] = gemini_key
+                
             display_chatbot()
 
         except Exception as e:
