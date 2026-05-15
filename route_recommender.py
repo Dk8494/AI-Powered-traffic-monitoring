@@ -11,7 +11,7 @@ def get_route_options(source, destination, is_emergency=False):
                 "type": "🚨 Emergency Priority Route",
                 "eta": "28 mins (Priority)",
                 "eta_mins": 28,
-                "toll": "$0.00 (Exempt)",
+                "toll": "₹0 (Exempt)",
                 "toll_cost": 0.0,
                 "traffic": "Clearing lanes...",
                 "fuel_efficiency": "N/A",
@@ -21,7 +21,7 @@ def get_route_options(source, destination, is_emergency=False):
                 "type": "Alternative Backup ⚡",
                 "eta": "32 mins",
                 "eta_mins": 32,
-                "toll": "$0.00 (Exempt)",
+                "toll": "₹0 (Exempt)",
                 "toll_cost": 0.0,
                 "traffic": "Moderate",
                 "fuel_efficiency": "N/A",
@@ -34,31 +34,31 @@ def get_route_options(source, destination, is_emergency=False):
                 "type": "Fastest Route ⚡",
                 "eta": "35 mins",
                 "eta_mins": 35,
-                "toll": "$8.50",
+                "toll": "₹150",
                 "toll_cost": 8.50,
                 "traffic": "Heavy",
                 "fuel_efficiency": "22 MPG",
                 "fuel_score": 22
             },
             {
-                "type": "Cheapest Route 💰",
-                "eta": "55 mins",
-                "eta_mins": 55,
-                "toll": "$0.00",
-                "toll_cost": 0.0,
-                "traffic": "Moderate",
-                "fuel_efficiency": "28 MPG",
-                "fuel_score": 28
-            },
-            {
                 "type": "AI Recommended ✨",
                 "eta": "40 mins",
                 "eta_mins": 40,
-                "toll": "$2.50",
+                "toll": "₹45",
                 "toll_cost": 2.50,
                 "traffic": "Light",
                 "fuel_efficiency": "32 MPG",
                 "fuel_score": 32
+            },
+            {
+                "type": "Cheapest Route 💰",
+                "eta": "55 mins",
+                "eta_mins": 55,
+                "toll": "₹0",
+                "toll_cost": 0.0,
+                "traffic": "Moderate",
+                "fuel_efficiency": "28 MPG",
+                "fuel_score": 28
             }
         ]
     return routes
