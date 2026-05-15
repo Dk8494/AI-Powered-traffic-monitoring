@@ -139,10 +139,8 @@ def main():
     with st.sidebar:
         st.image("https://cdn-icons-png.flaticon.com/512/2830/2830305.png", width=80)
         st.header("🚦 Mission Control")
-        
-        with st.expander("� API Integrations (Optional)", expanded=False):
-            gemini_key = st.text_input("AIzaSyAl3fUnwnMgQxG4BV576If0Xf4nxONzf2Q", type="password", help="Add key to enable live AI Chatbot. Leave blank to use safe fallback mode.")
-
+        with st.expander("🔑 API Integrations", expanded=False):
+            gemini_key = st.text_input("Gemini API Key", type="password", help="Add key to enable live AI Chatbot. Leave blank to use safe fallback mode.")
         with st.expander("�📍 Location & Routing", expanded=True):
             source = st.text_input("🟢 Source", value="Sector 18 Noida")
             destination = st.text_input("🔴 Destination", value="Akshardham")
@@ -218,10 +216,21 @@ def main():
             col_map, col_heat = st.columns([1.2, 1])
             with col_map:
                 st.subheader("🗺️ Live Directions Mapping")
+                
+                # Check UI option to show alternate routes
+                show_alternate = st.checkbox("Show Alternate Detour Route (Avoid Tolls & Highways)", value=False)
+                
                 if GOOGLE_MAPS_API_KEY and GOOGLE_MAPS_API_KEY != "YOUR_GOOGLE_MAPS_API_KEY_HERE":
                     origin_encoded = urllib.parse.quote(source)
                     dest_encoded = urllib.parse.quote(destination)
-                    map_url = f"https://www.google.com/maps/embed/v1/directions?key={GOOGLE_MAPS_API_KEY}&origin={origin_encoded}&destination={dest_encoded}&mode=driving"
+                    
+                    if show_alternate or prediction in ["HIGH", "VERY HIGH"]:
+                        st.info("🔄 Congestion active. Displaying alternative avoidance route.")
+                        # Force alternate route by avoiding tolls/highways in Maps Embed API
+                        map_url = f"https://www.google.com/maps/embed/v1/directions?key={GOOGLE_MAPS_API_KEY}&origin={origin_encoded}&destination={dest_encoded}&mode=driving&avoid=tolls|highways"
+                    else:
+                        map_url = f"https://www.google.com/maps/embed/v1/directions?key={GOOGLE_MAPS_API_KEY}&origin={origin_encoded}&destination={dest_encoded}&mode=driving"
+                        
                     st.markdown(f'<iframe width="100%" height="450" style="border:1px solid #333; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);" loading="lazy" allowfullscreen src="{map_url}"></iframe>', unsafe_allow_html=True)
                 else:
                     st.warning("⚠️ Please configure the GOOGLE_MAPS_API_KEY constant in app.py to enable live tracking.")
@@ -229,11 +238,13 @@ def main():
             with col_heat:
                 display_heatmap()
             st.divider()
-            
+
             # Module 7: AI Chatbot
             import os
             if gemini_key:
                 os.environ["GEMINI_API_KEY"] = gemini_key
+            else:
+                os.environ.pop("GEMINI_API_KEY", None)
                 
             display_chatbot()
 

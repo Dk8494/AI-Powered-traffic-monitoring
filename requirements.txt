@@ -7,3 +7,4 @@ googlemaps
 folium
 streamlit-folium
 openpyxl
+google-generativeai

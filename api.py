@@ -8,7 +8,7 @@ from flask_cors import CORS
 from predictor import predict_congestion
 from route_recommender import get_route_options, calculate_ai_score
 from alert_engine_api import generate_alerts
-from chatbot_engine import get_bot_response
+from chatbot_engine import get_ai_response
 from heatmap_engine_api import get_heatmap_data
 
 app = Flask(__name__)
@@ -90,7 +90,7 @@ def api_chat():
     """AI chatbot response."""
     data = request.json
     query = data.get("query", "")
-    response = get_bot_response(query)
+    response = get_ai_response(query)
     return jsonify({"response": response})
 
 

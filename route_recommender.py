@@ -4,6 +4,7 @@ import pandas as pd
 def get_route_options(source, destination, is_emergency=False):
     """
     Simulates fetching route options with toll, ETA, traffic, and fuel metrics.
+    Includes NHAI FASTag intelligence.
     """
     if is_emergency:
         routes = [
@@ -11,7 +12,7 @@ def get_route_options(source, destination, is_emergency=False):
                 "type": "🚨 Emergency Priority Route",
                 "eta": "28 mins (Priority)",
                 "eta_mins": 28,
-                "toll": "₹0 (Exempt)",
+                "toll": "₹0 (FASTag Exempt)",
                 "toll_cost": 0.0,
                 "traffic": "Clearing lanes...",
                 "fuel_efficiency": "N/A",
@@ -21,7 +22,7 @@ def get_route_options(source, destination, is_emergency=False):
                 "type": "Alternative Backup ⚡",
                 "eta": "32 mins",
                 "eta_mins": 32,
-                "toll": "₹0 (Exempt)",
+                "toll": "₹0 (FASTag Exempt)",
                 "toll_cost": 0.0,
                 "traffic": "Moderate",
                 "fuel_efficiency": "N/A",
@@ -34,31 +35,41 @@ def get_route_options(source, destination, is_emergency=False):
                 "type": "Fastest Route ⚡",
                 "eta": "35 mins",
                 "eta_mins": 35,
-                "toll": "₹150",
-                "toll_cost": 8.50,
-                "traffic": "Heavy",
-                "fuel_efficiency": "22 MPG",
-                "fuel_score": 22
+                "toll": "₹150 (NHAI Highway)",
+                "toll_cost": 150.0,
+                "traffic": "Flowing / High Speed",
+                "fuel_efficiency": "14 km/l",
+                "fuel_score": 14
+            },
+            {
+                "type": "Toll-Free Alternative 💰",
+                "eta": "55 mins",
+                "eta_mins": 55,
+                "toll": "₹0",
+                "toll_cost": 0.0,
+                "traffic": "Heavy (City Roads)",
+                "fuel_efficiency": "10 km/l",
+                "fuel_score": 10
+            },
+            {
+                "type": "Lowest Toll Route 🎫",
+                "eta": "45 mins",
+                "eta_mins": 45,
+                "toll": "₹45 (State Highway)",
+                "toll_cost": 45.0,
+                "traffic": "Moderate",
+                "fuel_efficiency": "12 km/l",
+                "fuel_score": 12
             },
             {
                 "type": "AI Recommended ✨",
                 "eta": "40 mins",
                 "eta_mins": 40,
-                "toll": "₹45",
-                "toll_cost": 2.50,
-                "traffic": "Light",
-                "fuel_efficiency": "32 MPG",
-                "fuel_score": 32
-            },
-            {
-                "type": "Cheapest Route 💰",
-                "eta": "55 mins",
-                "eta_mins": 55,
-                "toll": "₹0",
-                "toll_cost": 0.0,
-                "traffic": "Moderate",
-                "fuel_efficiency": "28 MPG",
-                "fuel_score": 28
+                "toll": "₹65 (Smart Route)",
+                "toll_cost": 65.0,
+                "traffic": "Light / Bypassing Bottlenecks",
+                "fuel_efficiency": "16 km/l",
+                "fuel_score": 16
             }
         ]
     return routes
@@ -67,8 +78,9 @@ def calculate_ai_score(route):
     """
     Custom AI recommendation logic (lower score is better).
     Normalizes and weights ETA, Toll, and Fuel Efficiency.
+    Note: Toll is scaled down so it's comparable with minutes.
     """
-    score = (route["eta_mins"] * 1.0) + (route["toll_cost"] * 1.5) - (route["fuel_score"] * 0.5)
+    score = (route["eta_mins"] * 1.5) + (route["toll_cost"] * 0.1) - (route["fuel_score"] * 1.2)
     return score
 
 def display_route_recommendations(source, destination, vehicle_type="Normal"):
@@ -79,12 +91,12 @@ def display_route_recommendations(source, destination, vehicle_type="Normal"):
     is_emergency = vehicle_type in ["Ambulance", "Fire Truck"]
     routes = get_route_options(source, destination, is_emergency)
     
-    st.subheader("🛣️ Smart Route Recommendations")
+    st.subheader("🛣️ Smart Route Recommendations (NHAI Toll Intelligence)")
     
     if is_emergency:
         st.error(f"🚨 **EMERGENCY MODE ACTIVE ({vehicle_type}):** Tolls exempted. Prioritizing absolute shortest ETA and traffic clearing.")
     else:
-        st.markdown("AI-analyzed routes factoring in **Tolls**, **Time**, and **Fuel Efficiency**.")
+        st.markdown("AI-analyzed routes factoring in **FASTag Tolls**, **Time**, **Traffic Levels**, and **Fuel Efficiency**.")
     
     cols = st.columns(len(routes))
     
@@ -105,12 +117,12 @@ def display_route_recommendations(source, destination, vehicle_type="Normal"):
             
             html = f"""
             <div style="background-color: {card_color}; padding: 15px; border-radius: 10px; {border_css} margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
-                <h4 style="margin-top: 0; color: #FFF;">{route['type']}</h4>
+                <h4 style="margin-top: 0; color: #FFF; font-size: 1.1rem;">{route['type']}</h4>
                 <hr style="border-color: #555; margin: 10px 0;">
-                <p style="margin: 5px 0;">⏱️ <b>ETA:</b> {route['eta']}</p>
-                <p style="margin: 5px 0;">💵 <b>Toll Fee:</b> {route['toll']}</p>
-                <p style="margin: 5px 0;">🚗 <b>Traffic:</b> {route['traffic']}</p>
-                <p style="margin: 5px 0;">🌱 <b>Fuel Efficiency:</b> {route['fuel_efficiency']}</p>
+                <p style="margin: 5px 0; font-size: 0.95rem;">⏱️ <b>ETA:</b> {route['eta']}</p>
+                <p style="margin: 5px 0; font-size: 0.95rem;">💵 <b>Toll Fee:</b> {route['toll']}</p>
+                <p style="margin: 5px 0; font-size: 0.95rem;">🚗 <b>Traffic:</b> {route['traffic']}</p>
+                <p style="margin: 5px 0; font-size: 0.95rem;">🌱 <b>Fuel Effic.:</b> {route['fuel_efficiency']}</p>
             </div>
             """
             st.markdown(html, unsafe_allow_html=True)

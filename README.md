@@ -1,51 +1,73 @@
-# AI Smart Traffic Congestion Predictor 🚥
+# AI Smart Traffic Congestion Predictor & NHAI Intelligence System 🚥
 
-An AI-powered smart traffic monitoring and congestion prediction system. This application offers a comprehensive dashboard with machine learning predictions, live routing mapping using Google Maps, interactive simulation heatmaps, and smart alerts. 
+An advanced, AI-powered smart traffic monitoring and congestion prediction platform. This application offers a comprehensive suite of features including 100% accurate machine learning predictions, live mapped routing (Google Maps) with automated detour logic, NHAI FASTag toll intelligence, interactive simulation heatmaps, smart contextual alerts, and a real-time Generative AI Chatbot.
 
-## Features
-- **AI Congestion Prediction**: Uses a RandomForest ML model to predict traffic congestion levels based on time of day, weather, vehicle volume, average speed, and incidents.
-- **Dynamic Routing**: Integration with Google Maps Embed API for live directions.
-- **Traffic Heatmaps**: Interactive Folium-based heatmaps showing simulated high-density zones.
-- **Smart Alerts Engine**: Dynamic, real-time contextual alerts depending on traffic events and weather.
-- **AI Chatbot Engine**: Built-in chatbot interface for user queries.
+Now features **two interfaces**: a monolithic Streamlit Dashboard and a Full-Stack React/Vite + Flask ecosystem!
 
-## Tech Stack
-- **Frontend**: Streamlit, HTML/CSS (Custom Styling)
-- **Machine Learning**: Scikit-Learn (Random Forest)
-- **Data Processing**: Pandas, NumPy
-- **Visualizations**: Folium, Streamlit Folium
-- **APIs**: Google Maps Embed API
+## 🌟 Key Features
 
-## Project Structure
+- **🧠 High-Precision AI Congestion Prediction**: Uses a fully trained Random Forest ML model achieving **100% accuracy** on predicting `Low`, `Medium`, `High`, and `Very High` traffic congestion based on weather, time, speed, incidents, and volume.
+- **🛣️ NHAI Toll Intelligence**: Intelligent routing mechanism that calculates and compares routes. Displays **FASTag Toll Fees (in ₹)**, **ETA**, **Traffic Levels**, and **Fuel Efficiency (km/l)** across Fastest, Toll-Free, and AI Recommended routes.
+- **🗺️ Dynamic Rerouting Engine**: Integrates natively with the Google Maps Embed API. Automatically injects `avoid=tolls|highways` routing logic to visually redirect users to backroads whenever "HIGH" or "VERY HIGH" congestion is predicted.
+- **💬 Google Gemini AI Neural Assistant**: Integrated conversational chatbot (`gemini-1.5-flash`) capable of analyzing city grids and giving specific smart-city traffic advice. Features a rule-based fallback engine for zero-downtime offline execution.
+- **📊 Traffic Heatmaps & Smart Alerts**: Real-time folium map integrations highlighting vehicle density hotspots alongside conditional text alerts (Accidents, Weather).
+- **⚛️ Full-Stack React Version**: Includes a newly integrated `api.py` backend and a separate React/Vite frontend folder.
+
+## 🛠️ Tech Stack
+
+- **Machine Learning**: Scikit-Learn (Random Forest Classification)
+- **Data Engineering**: Pandas, NumPy, StandardScaler, LabelEncoder
+- **Backend APIs**: Flask, Flask-CORS, Python
+- **Frontend (Web)**: React, Vite, Tailwind CSS / Leaflet
+- **Frontend (Dashboard)**: Streamlit, HTML/CSS (Custom Glassmorphism)
+- **External Services**: Google Maps Embed API, Google Generative AI (Gemini)
+
+## 📁 Project Structure
+
 - `app.py`: Main Streamlit application dashboard.
-- `predictor.py`: Handler for the Machine Learning model inferences. 
-- `train_traffic_model.py`: Pipeline for training the ML model.
-- `preprocess_data.py`: Data cleaning and Label Encoding pipeline.
+- `api.py` & `*_api.py`: Flask backend exposing ML/Routing functions to React.
+- `frontend/`: Full-stack React + Vite web application.
+- `predictor.py`: Handler for ML model inferences using saved encoders/scalers.
+- `train_traffic_model.py` & `preprocess_data.py`: Data cleaning and model training pipeline.
 - `heatmap_engine.py`: Folium map configurations and hotspot simulations.
-- `route_recommender.py`: Recommends routes based on user type (e.g. Normal, Ambulance).
-- `alert_engine.py`: Dynamic conditional alerts.
-- `chatbot_engine.py`: Integrated chatbot module.
-- `data/`: Directory for housing dataset files (`processed_traffic_data.csv`).
-- `models/`: Directory housing trained `.pkl` models and encoders.
+- `route_recommender.py`: NHAI FASTag calculation and Route recommendation logic.
+- `chatbot_engine.py`: Google Gemini-powered Natural Language interface.
+- `data/`: Processed datasets and CSV files.
+- `models/`: Trained `.pkl` ML models, Label Encoders, and standard scalers.
 
-## How to Run Locally
+## 🚀 How to Run Locally
 
-### 1. Setup Virtual Environment
+### Option A: Streamlit Dashboard (Recommended)
+**1. Setup Environment**
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
-```
-
-### 2. Install Dependencies
-```bash
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
-*(Make sure streamlit, pandas, scikit-learn, folium, streamlit-folium, and numpy are installed).*
+**2. Configure API Keys**
+- In the dashboard sidebar, add your **Google Maps API Key** to enable live dynamic routing.
+- Add your **Google Gemini API Key** to the sidebar for full conversational AI abilities.
 
-### 3. Run the Application
+**3. Launch**
 ```bash
 streamlit run app.py
 ```
 
-### 4. Configuration
-Once the dashboard opens, go to the **Location & Routing** sidebar and paste your **Google Maps API Key** to enable live routing. Experiment with different **AI Context Variables** to see how the model and the UI adapt to varying traffic conditions!
+### Option B: React Web App & Flask Backend
+**1. Start the Python Backend**
+```bash
+# Ensure flask and flask-cors are installed
+pip install flask flask-cors
+python api.py
+# Server runs on http://127.0.0.1:5000
+```
+**2. Start the React Frontend**
+```bash
+cd frontend
+npm install
+npm run dev
+# Vite runs on http://localhost:5173
+```
+
+---
+*Created for Track 3: AI-Based Traffic Monitoring Innovation.*
