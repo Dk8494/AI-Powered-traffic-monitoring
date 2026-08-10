@@ -1,4 +1,3 @@
-import streamlit as st
 import google.generativeai as genai
 import os
 import logging
@@ -39,25 +38,5 @@ def get_ai_response(query):
         logger.error(f"Gemini API Error: {e}")
         return get_mock_response(query)
 
-def display_chatbot():
-    st.markdown("### <span style='color: #00F0FF;'>💬 AI Neural Assistant</span>", unsafe_allow_html=True)
-    
-    if "messages" not in st.session_state:
-        st.session_state.messages = [
-            {"role": "assistant", "content": "Initializing Neural Network... I am online. How can I assist with your journey today?"}
-        ]
-
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
-
-    if prompt := st.chat_input("E.g., 'What is the fastest route right now?' or 'Any accidents locally?'"):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        with st.chat_message("assistant"):
-            with st.spinner("Analyzing city grid..."):
-                response = get_ai_response(prompt)
-                st.markdown(response)
-                st.session_state.messages.append({"role": "assistant", "content": response})
+# NOTE: Streamlit UI removed. Frontend should call `get_ai_response(query)`
+# or use the Flask `/api/chat` endpoint implemented in `api.py`.

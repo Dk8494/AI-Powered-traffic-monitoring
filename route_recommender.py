@@ -1,5 +1,6 @@
-import streamlit as st
-import pandas as pd
+"""Route recommender logic without Streamlit dependency.
+Provides `get_route_options` and `calculate_ai_score` for API use.
+"""
 
 def get_route_options(source, destination, is_emergency=False):
     """
@@ -84,45 +85,21 @@ def calculate_ai_score(route):
     return score
 
 def display_route_recommendations(source, destination, vehicle_type="Normal"):
-    """
-    Renders the toll-aware route recommendation module in Streamlit.
-    Reacts to Emergency Vehicle context.
+    """Return route recommendation payload usable by a frontend.
+
+    Returns a dict with routes and the best route flagged.
     """
     is_emergency = vehicle_type in ["Ambulance", "Fire Truck"]
     routes = get_route_options(source, destination, is_emergency)
-    
-    st.subheader("🛣️ Smart Route Recommendations (NHAI Toll Intelligence)")
-    
-    if is_emergency:
-        st.error(f"🚨 **EMERGENCY MODE ACTIVE ({vehicle_type}):** Tolls exempted. Prioritizing absolute shortest ETA and traffic clearing.")
-    else:
-        st.markdown("AI-analyzed routes factoring in **FASTag Tolls**, **Time**, **Traffic Levels**, and **Fuel Efficiency**.")
-    
-    cols = st.columns(len(routes))
-    
-    # Sort or mark the best AI route based on the logic
     best_route = min(routes, key=calculate_ai_score)
-    
-    for idx, route in enumerate(routes):
-        with cols[idx]:
-            # Highlight the AI Recommended/Emergency route
-            is_best = (route == best_route)
-            
-            if is_emergency and is_best:
-                card_color = "#B71C1C" # Deep red for emergency
-                border_css = "border: 2px solid #FF5252;"
-            else:
-                card_color = "#2E7D32" if is_best else "#2D2D2D"
-                border_css = "border: 2px solid #4CAF50;" if is_best else "border: 1px solid #444;"
-            
-            html = f"""
-            <div style="background-color: {card_color}; padding: 15px; border-radius: 10px; {border_css} margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
-                <h4 style="margin-top: 0; color: #FFF; font-size: 1.1rem;">{route['type']}</h4>
-                <hr style="border-color: #555; margin: 10px 0;">
-                <p style="margin: 5px 0; font-size: 0.95rem;">⏱️ <b>ETA:</b> {route['eta']}</p>
-                <p style="margin: 5px 0; font-size: 0.95rem;">💵 <b>Toll Fee:</b> {route['toll']}</p>
-                <p style="margin: 5px 0; font-size: 0.95rem;">🚗 <b>Traffic:</b> {route['traffic']}</p>
-                <p style="margin: 5px 0; font-size: 0.95rem;">🌱 <b>Fuel Effic.:</b> {route['fuel_efficiency']}</p>
-            </div>
-            """
-            st.markdown(html, unsafe_allow_html=True)
+
+    result = {
+        "is_emergency": is_emergency,
+        "routes": [],
+    }
+    for r in routes:
+        rr = r.copy()
+        rr["recommended"] = (r == best_route)
+        result["routes"].append(rr)
+
+    return result

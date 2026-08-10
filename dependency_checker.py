@@ -13,9 +13,9 @@ def check_dependencies():
         'sklearn': 'scikit-learn',
         'openpyxl': 'openpyxl',
         'joblib': 'joblib',
-        'streamlit': 'streamlit',
         'folium': 'folium',
-        'streamlit_folium': 'streamlit-folium',
+        'flask': 'flask',
+        'flask_cors': 'flask-cors',
         'googlemaps': 'googlemaps',
         'matplotlib': 'matplotlib',
         'seaborn': 'seaborn'
